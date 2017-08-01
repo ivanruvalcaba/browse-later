@@ -1,11 +1,5 @@
 let storage_key = "BrowseLaterTabs";
 
-let createPageAction = function () {
-    browser.tabs.query({active: true, currentWindow: true}).then((tabs) => {
-      browser.pageAction.show(tabs[0].id);
-    });
-}
-
 let getAllSavesTabs = function () {
     let saved_tabs_json = localStorage.getItem(storage_key);
     var saved_tabs = [];
@@ -32,21 +26,28 @@ let saveTab = function (id, url, title, pinned) {
         saved_tabs.push(save_tab);
     }
     localStorage.setItem(storage_key, JSON.stringify(saved_tabs));
-    browser.tabs.remove(id);
+    chrome.tabs.remove(id);
     updateBrowserAction();
+}
+
+let saveCurrentTab = function () {
+    chrome.tabs.query({active: true, currentWindow: true}, function(tabs) {
+        let tab = tabs[0];
+        saveTab(tab.id, tab.url, tab.title, tab.pinned);
+    });
 }
 
 let updateBrowserAction = function () {
     var saved_tabs = getAllSavesTabs();
-    browser.browserAction.setBadgeText({text: saved_tabs.length.toString()});
-    browser.browserAction.setTitle({title: "Click to restore " + saved_tabs.length.toString() + " tabs."});
-    browser.browserAction.setBadgeBackgroundColor({color: (saved_tabs.length > 0 ? "green" : "gray")});
+    chrome.browserAction.setBadgeText({text: saved_tabs.length.toString()});
+    chrome.browserAction.setTitle({title: "Click to restore " + saved_tabs.length.toString() + " tabs."});
+    chrome.browserAction.setBadgeBackgroundColor({color: (saved_tabs.length > 0 ? "green" : "gray")});
 }
 
 let openAllTabs = function() {
     let saved_tabs = getAllSavesTabs();
     saved_tabs.forEach(function(tab) {
-        browser.tabs.create({
+        chrome.tabs.create({
             "url": tab.url,
             "pinned": tab.pinned
         });
@@ -84,7 +85,7 @@ let copyAllTabs = function() {
 
 let openTab = function(event) {
     event.preventDefault();
-    browser.tabs.create({ "url": event.target.href });
+    chrome.tabs.create({ "url": event.target.href });
 
     let saved_tabs = getAllSavesTabs();
     var new_tabs = [];
