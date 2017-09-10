@@ -1,20 +1,23 @@
 {
     "manifest_version": 2,
     "name": "Browse Later",
-    "version": "2.5",
+    "version": "3.0.1",
     "description": "Stash your tabs and browse later.",
     "homepage_url": "https://github.com/hoyang/browse-later",
     "icons": {
-        "48": "icons/BrowseLater-64.png"
+        "64": "icons/icon.png"
     },
 
     "permissions": [
-        "tabs"
+        "tabs",
+        "storage",
+        "clipboardWrite"
     ],
 
     "browser_action": {
-        "default_icon": "icons/BrowseLater-64.png",
-        "default_title": "Browse now"
+        "default_icon": "icons/browse-later-icon-light.png",
+        "default_title": "Browse now",
+        "browser_style": true
     },
 
     "background": {

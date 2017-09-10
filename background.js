@@ -1,4 +1,3 @@
-
 chrome.browserAction.setIcon({
     path: {
         38: "icons/BrowseLater-64.png"
