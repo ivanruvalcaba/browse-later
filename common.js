@@ -141,7 +141,7 @@ let saveCurrentTab = function () {
     });
 }
 
-let updateBrowserAction = function () {
+let updateBrowserAction = function (callback) {
     log("updateBrowserAction");
     getAllSavesTabs().then((tabs) => {
         if(tabs.length > 0) {
@@ -219,7 +219,7 @@ let openTab = function(event) {
 }
 
 let cleanupAllTabs = function () {
-    storage_backend.remove(storage_key).then(() => {
+    storage_backend.remove(storage_key, function() {
         updateBrowserAction(window.close);
     });
 }
