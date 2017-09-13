@@ -1,31 +1,27 @@
-
 var showTabsList = function(event) {
     //let scrollbar_width = getScrollbarWidth();
-
     getAllSavesTabs().then((tabs) => {
         var tabs_list = document.getElementById("tab_list");
         var tab_list_header_container = document.getElementById("tab_list_header_container");
         var empty_list = document.getElementById("empty_list_container");
 
         document.getElementById("tab_list_open").addEventListener("click", saveCurrentTab);
-        document.getElementById("tab_list_open_icon").addEventListener("click", saveCurrentTab);
-        document.getElementById("tab_list_open_text").addEventListener("click", saveCurrentTab);
 
         document.getElementById("tab_list_open_all").addEventListener("click", openAllTabs);
         document.getElementById("tab_list_copy").addEventListener("click", copyAllTabs);
         document.getElementById("tab_list_clear").addEventListener("click", cleanupAllTabs);
 
         if(tabs.length == 0) {
-            empty_list.style.display = 'inline-block';
+            empty_list.style.display = 'flex';
             tabs_list.style.display = 'none';
             //tab_list_header_container.style.display = 'none';
         } else {
 
             empty_list.style.display = 'none';
-            tabs_list.style.display = 'inline-block';
-            tabs_list.style.display = 'inline-block';
+            tab_list_header_container.style.display = 'flex';
+            tabs_list.style.display = 'block';
 
-            tabs.forEach(function(tab) {
+            tabs.reverse().forEach(function(tab) {
                 if(typeof(tab) != 'undefined') {
                     var tab_item = document.createElement("li");
                     tab_item.setAttribute("class", "tab_list_item_li");
@@ -38,30 +34,30 @@ var showTabsList = function(event) {
                     tab_item_url.target = "_blank";
                     tab_item_url.title = tab.title;
 
-                    var tab_item_favicon = document.createElement("img");
-                    tab_item_favicon.setAttribute("class", "tab_list_item_img");
-                    tab_item_favicon.setAttribute("src", "icons/icon.png");
+                    tab_item_url.style.backgroundImage = "url(icons/icon.png)";
                     if(tab.favicon != undefined) {
-                        tab_item_favicon.setAttribute("src", tab.favicon);
-                        //console.log(tab.favicon);
+                        tab_item_url.style.backgroundImage = "url("+ tab.favicon +")";
                     }
 
-                    var tab_item_copy = document.createElement("img");
-                    tab_item_copy.setAttribute("class", "tab_list_item_img tab_list_item_img_nobg");
-                    tab_item_copy.setAttribute("src", "icons/copy.png");
-                    tab_item_copy.setAttribute("title", "Copy this item's URL");
-                    tab_item_copy.setAttribute("data-url", tab.url);
+                    var tab_item_menu = document.createElement("div");
+                    tab_item_menu.setAttribute("class", "tab_item_menu");
 
-                    var tab_item_delete = document.createElement("img");
-                    tab_item_delete.setAttribute("class", "tab_list_item_img tab_list_item_img_nobg");
-                    tab_item_delete.setAttribute("src", "icons/trash.png");
-                    tab_item_delete.setAttribute("title", "Remove this item");
+                    var tab_item_copy = document.createElement("button");
+                    tab_item_copy.setAttribute("class", "tab_list_item_nobg copy_item");
+                    tab_item_copy.setAttribute("title", "Copy URL");
+                    tab_item_copy.setAttribute("data-url", tab.url);
+                    tab_item_copy.style.backgroundImage = "url(icons/copy_url.png)";
+
+                    var tab_item_delete = document.createElement("button");
+                    tab_item_delete.setAttribute("class", "tab_list_item_nobg delete_item");
+                    tab_item_delete.setAttribute("title", "Remove");
                     tab_item_delete.setAttribute("data-url", tab.url);
 
-                    tab_item.appendChild(tab_item_favicon);
+                    tab_item_menu.appendChild(tab_item_copy);
+                    tab_item_menu.appendChild(tab_item_delete);
+
                     tab_item.appendChild(tab_item_url);
-                    tab_item.appendChild(tab_item_copy);
-                    tab_item.appendChild(tab_item_delete);
+                    tab_item.appendChild(tab_item_menu);
 
                     tabs_list.appendChild(tab_item);
 
